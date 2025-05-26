@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "og-img-worker-cloudflare",
+	"name": "simple-cached-proxy-worker-cloudflare",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-05-26",
 	"observability": {
