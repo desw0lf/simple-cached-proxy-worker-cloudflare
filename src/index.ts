@@ -9,8 +9,9 @@ export default {
       pathname: "/:pathname+",
     });
 
-    const { key, baseUrl, allowedParams } = {
+    const { key, baseUrl, allowedParams, stripHeaders } = {
       key: env.KEY || "stuff",
+      stripHeaders: env.STRIP_HEADERS ? env.STRIP_HEADERS.split(",") : [],
       baseUrl: env.BASE_URL.startsWith("http") ? env.BASE_URL : `https://${env.BASE_URL}`,
       allowedParams: env.ALLOWED_SEARCH || "" // "w=__any&h=__any&fit=max|crop&auto=format&q=100&blur=10"
     };
@@ -32,6 +33,18 @@ export default {
 
     const response = await c.fetch(key, targetUrl.href, ctx);
 
-    return response;
+    if (stripHeaders.length === 0) {
+      return response;
+    }
+
+    const originalHeaders = new Headers(response.headers);
+
+    stripHeaders.forEach((header) => originalHeaders.delete(header));
+
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: originalHeaders,
+    });
 	},
 } satisfies ExportedHandler<Env>;
