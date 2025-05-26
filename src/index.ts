@@ -18,6 +18,11 @@ export default {
 
     const url = new URL(request.url);
 
+    if (url.pathname === "/favicon.ico") {
+      const svg = `<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" fill="#000000"/></svg>`;
+      return new Response(svg, { headers: { "Content-Type": "image/svg+xml", "Cache-Control": "public, max-age=604800, s-maxage=2592000", "Access-Control-Allow-Origin": "*" } });
+    }
+
     const match = pattern.exec(url);
 
     if (!match || !match.pathname.groups.pathname) {
